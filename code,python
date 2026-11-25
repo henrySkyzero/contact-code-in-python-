@@ -1,0 +1,77 @@
+import json
+import os
+
+file = "kontak.json"
+
+
+def load_data():
+    if os.path.exists(file):
+        with open(file, "r") as f:
+            return json.load(f)
+    else:
+        return []
+
+
+def save_data(data):                      
+    with open(file, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def add_contact(data):                    
+    nama = input("Masukkan nama: ")
+    while True:
+        nomor = input("Masukkan nomor telepon: ")
+        if nomor.isdigit():
+            break
+        else:
+            print("Nomor telepon harus berupa angka. Silakan coba lagi.")
+
+    data.append({"nama": nama, "nomor": nomor})   
+    save_data(data)                                
+    print("Kontak berhasil ditambahkan.")
+
+
+def tampil_kontak(data):                  
+    if not data:
+        print("Tidak ada kontak yang tersimpan.")
+    else:
+        print("Daftar Kontak:")
+        for i, kontak in enumerate(data, start=1):
+            print(f"{i}. {kontak['nama']} - {kontak['nomor']}")
+
+
+def cari_kontak(data):                    
+    keyword = input("Masukkan nama atau nomor yang ingin dicari: ")
+    hasil = [k for k in data if keyword.lower() in k['nama'].lower() or keyword in k['nomor']]
+    if not hasil:
+        print("Kontak tidak ditemukan.")
+    else:
+        print("Hasil Pencarian:")
+        for i, kontak in enumerate(hasil, start=1):
+            print(f"{i}. {kontak['nama']} - {kontak['nomor']}")
+
+
+def main():                              
+    kontak = load_data()
+    while True:
+        print("\nMenu:")
+        print("1. Tambah Kontak")
+        print("2. Tampilkan Kontak")
+        print("3. Cari Kontak")
+        print("4. Keluar")
+        pilihan = input("Pilih menu (1-4): ")
+
+        if pilihan == "1":
+            add_contact(kontak)
+        elif pilihan == "2":
+            tampil_kontak(kontak)
+        elif pilihan == "3":
+            cari_kontak(kontak)
+        elif pilihan == "4":
+            print("Terima kasih telah menggunakan aplikasi ini.")
+            break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
+
+
+main()                                    
